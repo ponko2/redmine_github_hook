@@ -1,0 +1,27 @@
+services:
+  redmine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - redmine-data:/usr/src/redmine/files
+      - .:/usr/src/redmine/plugins/redmine_github_hook
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: example
+      REDMINE_PLUGINS_MIGRATE: "true"
+      REDMINE_SECRET_KEY_BASE: supersecretkey
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: redmine
+volumes:
+  redmine-data:
+  mysql-data:
